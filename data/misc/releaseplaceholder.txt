@@ -1,0 +1,7 @@
+**Bot Release Info**
+
+Present Time: `{}`
+Last Restart: `{}`
+Latest Update: `{}`
+Uptime: `{}`
+Version: `{}`

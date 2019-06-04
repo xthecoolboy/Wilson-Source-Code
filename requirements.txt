@@ -1,0 +1,8 @@
+discord.py[voice]
+asyncio
+pyyaml
+bs4
+beautifulsoup4
+requests
+youtube_dl
+rule34

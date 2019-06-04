@@ -1,0 +1,5 @@
+---
+reactionName:
+  img: imageUrl
+  message: <@{}> is {}
+  subject: example

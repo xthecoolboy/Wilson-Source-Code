@@ -13,7 +13,7 @@ class Generics(commands.Cog):
     @commands.command()
     async def hello(self, ctx):
         '''Basically the bot's "Hello, World!"'''
-        await ctx.send('Greetings mortal...')
+        await ctx.send('Hello, World!')
 
     @commands.command()
     async def ping(self, ctx):

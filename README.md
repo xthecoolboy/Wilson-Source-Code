@@ -1,5 +1,16 @@
 # Wilson Source Code
 This is a repository where I commit a cut down version of my discord bot. Feel free to clone this and use it to write your own! I have removed a lot of the features so you'll need to fill in the gaps yourself. I'd also recommend writing your own commands/ structure, though feel free to use this repo as a reference. Be sure to credit me [@RogueSensei](https://github.com/RogueSensei/) :smile:
+## Wilson
+Wilson is a Discord Bot using the [discord.py](https://discordpy.readthedocs.io/en/latest/) API. His commands include general chat fun, moderation commands, sniffing out and shunning pings to himself or `@everyone` and generally being an ass.
+### Inviting Wilson
+Wilson can be invited to a server by typing `|invite` in a server he is in. He will then send a direct message to you with his invite link. A website is due to be constructed to invite him from there.
+### Using Wilson
+Wilson responds to specific commands with `|` as a prefix. For a list of all his commands, type `|help`. For details on a specific command, type `|help` followed by the name of a command listed when calling help.
+Example: `|help hello`
+## A Tip of the Hat
+- [@AlexFlipnote](https://github.com/AlexFlipnote) - Structure based off of his [discord_bot.py](https://github.com/AlexFlipnote/discord_bot.py) repo, and [nekos.py](https://github.com/Nekos-life/nekos.py) is used. Be sure to check out his work :smile:
+- [Imgur/imgurpython](https://github.com/Imgur/imgurpython) is also used
+## Authoring your own bot
 ### Requirements
 - `discord.py[voice]`
 - `asyncio`
@@ -64,13 +75,6 @@ Don't touch these at all:
 
 ### Running
 Providing everything is set up correctly, run `main.py` and your bot should come online. Be sure to say `hello` :smile:
-# Wilson
-Wilson is a Discord Bot using the [discord.py](https://discordpy.readthedocs.io/en/latest/) API. His commands include general chat fun, moderation commands, sniffing out and shunning pings to himself or `@everyone` and generally being an ass.
-### Inviting Wilson
-Wilson can be invited to a server by typing `|invite` in a server he is in. He will then send a direct message to you with his invite link. A website is due to be constructed to invite him from there.
-### Using Wilson
-Wilson responds to specific commands with `|` as a prefix. For a list of all his commands, type `|help`. For details on a specific command, type `|help` followed by the name of a command listed when calling help.
-Example: `|help hello`
 ### Writing Help Files
 You may have noticed in `/data/help` there are some text files named `all.txt` and `hello.txt`. This is the main help file and the help file for the `hello` command respectively. If you do not want to write your own help files, you can use the default `discord.py` help command which uses the comments at the top of each command method. To use the default help command, go to `main.py` and look for the line that reads `bot.remove_command('help')` on line 12 and comment it out. Then go to `generics.py` line 81. You should see the help command which should look something like this:
 ```py
@@ -85,7 +89,35 @@ async def help(self, ctx, helpfile='all'):
         await ctx.send('An error has occured. The help file either doesn\'t nor will exist or hasn\'t been implemented yet.')
 ```
 Comment this code out. *You can delete these lines if you wish, but I recommend leaving them in should you decide to write you own help files*
-# All Set!
+### Imgur API
+If you want to make use of the Imgur API, you can register your bot [here](https://api.imgur.com/#registerapp). If you do not wish to use it, you can remove the `imgur_client_id` and `imgur_client_secret` entries in `config.py`. Then, inside `images.py`, comment out/remove:
+- line 4: `import config`
+- line 9: `from utils.imgurpython import ImgurClient`
+- line 16: The `imgur` method:
+
+```py
+@commands.command()
+async def imgur(self, ctx, *, search):
+       '''Imgur'''
+       client_id = config.bot['imgur_client_id']
+       client_secret = config.bot['imgur_client_secret']
+       client = ImgurClient(client_id, client_secret)
+       search_result = client.gallery_search(search)
+       if (len(search_result) == 0):
+         await ctx.send('No results found')
+         return
+       galleries = list(map(lambda x : x.id, filter(lambda y : y.is_album, search_result)))
+       album = client.get_album_images(galleries[random.randint(0, len(galleries) - 1)])
+       images = list(map(lambda x : x.link, album))
+       image = images[random.randint(0, len(images) - 1)]
+       embed = discord.Embed(title='Imgur: {}'.format(search), description='',
+                       colour=0x1f0000)
+       embed.set_image(url=image)
+       embed.set_footer(text='Requested by: {}'.format(ctx.message.author))
+       await ctx.send(embed=embed)
+```
+You can also remove the `imgurpython` folder in `utils`
+### All Set!
 Now go fire up a raspberry pi and run your own discord bot!
 # Wilson Update History
 ## Ver. 0.5 The Pi Home Update
